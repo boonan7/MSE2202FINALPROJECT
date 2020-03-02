@@ -10,6 +10,7 @@
 #include "source.h"
 #include "header.h"
 #include "IRsensor.h"
+#include "movement.h"
 
 boolean bt_Motors_Enabled = true;
 boolean bt_Heartbeat = true;
@@ -181,18 +182,26 @@ void loop()
             //IF IT SENSES AN IR CUNT
             if (mySerial.available()) {
               switch (IRSense()) {
-                case 0:{
+                case 0: {
                     Serial.println("zero bitch");
+                    moveStraight();
                     break;
-                }
+                  }
 
-                case 5:{
-                  Serial.println("five cunt");
-                  break;
-                }
-                  
-                  
+                case 5: {
+                    Serial.println("five cunt");
+                    break;
+                  }
+                default: {
+
+                  }
+
+
+
               }
+            }
+            else {
+              moveFind();
             }
 
 

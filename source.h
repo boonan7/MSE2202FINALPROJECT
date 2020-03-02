@@ -13,7 +13,7 @@ I2CEncoder encoder_RightMotor;
 I2CEncoder encoder_LeftMotor;
 
 
-SoftwareSerial mySerial(A2, 11); // RX, TX
+SoftwareSerial mySerial(4, 11); // RX, TX
 
 
 
