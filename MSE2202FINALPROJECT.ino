@@ -157,6 +157,8 @@ void loop()
       }
     case 1: //Robot Run after 3 seconds
       {
+
+        //modeCheck(); allows us to figure out the orientation of the robot
         if (bt_3_S_Time_Up)
         {
           readLineTrackers();
@@ -179,6 +181,13 @@ void loop()
 
           if (bt_Motors_Enabled)
           {
+
+            //add proper movement depending on mode that modeCheck() has given
+
+
+
+
+
             //IF IT SENSES AN IR CUNT
             if (mySerial.available()) {
               switch (IRSense()) {
@@ -190,28 +199,19 @@ void loop()
 
                 case 5: {
                     Serial.println("five cunt");
+                    moveStraight();
                     break;
                   }
-                default: {
-
-                  }
-
-
-
               }
             }
             else {
+              // when it does NOT sense IR Sensor
+              Serial.println("cant find nothin");
               moveFind();
             }
 
 
-            //ADD CODE BITCH
-            /*
-              make sure its the zero beacon
-              it will start by scanning left and right
-              if beacon = true then move towards it
-              if it is not then start scanning again then keep moving in the direction where it is pinged
-            */
+
 
 
 

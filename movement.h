@@ -17,12 +17,17 @@ void moveRight() {
 }
 
 void moveStraight() {
-  servo_LeftMotor.writeMicroseconds(1600);
-  servo_RightMotor.writeMicroseconds(1600);
+  servo_LeftMotor.writeMicroseconds(1800);
+  servo_RightMotor.writeMicroseconds(1800);
 
 }
 
 void moveFind() {
   servo_LeftMotor.writeMicroseconds(1400);
   servo_RightMotor.writeMicroseconds(1600);
+}
+
+int modeCheck(){
+  //code to check the mode (north or south west) based on the intial measurements of the ultrasonic sensor
+  return 0;
 }
