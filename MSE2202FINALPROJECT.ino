@@ -178,6 +178,7 @@ void loop()
 
           if (bt_Motors_Enabled)
           {
+            //IF IT SENSES AN IR CUNT
             if (mySerial.available()) {
               switch (IRSense()) {
                 case 0:{
