@@ -13,15 +13,18 @@ I2CEncoder encoder_RightMotor;
 I2CEncoder encoder_LeftMotor;
 
 
-SoftwareSerial mySerial(4, 11); // RX, TX
+SoftwareSerial mySerial(A0, 11); // RX, TX
 
 
 
 //port pin constants
-const int ci_Ultrasonic_Ping = 2; //input plug
-const int ci_Ultrasonic_Data = 3; //output plug
-const int ci_Charlieplex_LED1 = 4;
-const int ci_Charlieplex_LED2 = 5;
+const int ci_Ultrasonic1_Ping = 2; //input plug
+const int ci_Ultrasonic1_Data = 3; //output plug
+const int ci_Ultrasonic2_Ping = 4;
+const int ci_Ultrasonic2_Data = 5;
+
+const int ci_Charlieplex_LED1 = 10;
+const int ci_Charlieplex_LED2 = 10;
 const int ci_Charlieplex_LED3 = 6;
 const int ci_Charlieplex_LED4 = 7;
 const int ci_Mode_Button = 7;
@@ -80,6 +83,7 @@ const int ci_Motor_Calibration_Time = 5000;
 byte b_LowByte;
 byte b_HighByte;
 unsigned long ul_Echo_Time;
+unsigned long ul_Echo_Time2;
 unsigned int ui_Left_Line_Tracker_Data;
 unsigned int ui_Middle_Line_Tracker_Data;
 unsigned int ui_Right_Line_Tracker_Data;

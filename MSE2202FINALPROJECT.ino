@@ -46,8 +46,10 @@ void setup() {
   Serial.print("welcome to hell mother fucker");
 
   // set up ultrasonic
-  pinMode(ci_Ultrasonic_Ping, OUTPUT);
-  pinMode(ci_Ultrasonic_Data, INPUT);
+  pinMode(ci_Ultrasonic1_Ping, OUTPUT);
+  pinMode(ci_Ultrasonic1_Data, INPUT);
+  pinMode(ci_Ultrasonic2_Ping, OUTPUT);
+  pinMode(ci_Ultrasonic2_Data, INPUT);
 
   // set up drive motors
   pinMode(ci_Right_Motor, OUTPUT);
@@ -144,8 +146,8 @@ void loop()
   {
     case 0: //Robot stopped
       {
-        readLineTrackers();
-        Ping();
+        pingFront();
+        pingLeft();
         servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
         servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
         servo_ArmMotor.write(ci_Arm_Servo_Retracted);
@@ -159,15 +161,16 @@ void loop()
       {
 
         //modeCheck(); allows us to figure out the orientation of the robot
+
+
         if (bt_3_S_Time_Up)
         {
-          readLineTrackers();
 #ifdef DEBUG_ENCODERS
           l_Left_Motor_Position = encoder_LeftMotor.getRawPosition();
           l_Right_Motor_Position = encoder_RightMotor.getRawPosition();
           Serial.print("Encoders L: ");
           Serial.print(l_Left_Motor_Position);
-          Serial.print(", R: ");
+          Serial.print(", R: "); 
           Serial.println(l_Right_Motor_Position);
 #endif
           // set motor speeds
@@ -183,31 +186,35 @@ void loop()
           {
 
             //add proper movement depending on mode that modeCheck() has given
+            Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
+          
 
 
 
 
+            //must have interrupt that goes true if light sensor senses
+            //interrupts only have thing
 
             //IF IT SENSES AN IR CUNT
             if (mySerial.available()) {
               switch (IRSense()) {
                 case 0: {
                     Serial.println("zero bitch");
-                    moveStraight();
+                    //moveStraight();
                     break;
                   }
 
                 case 5: {
                     Serial.println("five cunt");
-                    moveStraight();
+                    //moveStraight();
                     break;
                   }
               }
             }
             else {
-              // when it does NOT sense IR Sensor
-              Serial.println("cant find nothin");
-              moveFind();
+//              // when it does NOT sense IR Sensor
+//              Serial.println("cant find nothin");
+//              moveFind();
             }
 
 
@@ -252,7 +259,7 @@ void loop()
           else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
           {
             ul_Calibration_Time = millis();
-            readLineTrackers();
+            
             ui_Left_Line_Tracker_Light += ui_Left_Line_Tracker_Data;
             ui_Middle_Line_Tracker_Light += ui_Middle_Line_Tracker_Data;
             ui_Right_Line_Tracker_Light += ui_Right_Line_Tracker_Data;
@@ -299,7 +306,6 @@ void loop()
           else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
           {
             ul_Calibration_Time = millis();
-            readLineTrackers();
             ui_Left_Line_Tracker_Dark += ui_Left_Line_Tracker_Data;
             ui_Middle_Line_Tracker_Dark += ui_Middle_Line_Tracker_Data;
             ui_Right_Line_Tracker_Dark += ui_Right_Line_Tracker_Data;

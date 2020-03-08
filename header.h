@@ -1,16 +1,20 @@
 
 // measure distance to target using ultrasonic sensor
 //#define DEBUG_LINE_TRACKERS
-void Ping()
+int pingFront()
 {
   //Ping Ultrasonic
   //Send the Ultrasonic Range Finder a 10 microsecond pulse per tech spec
-  digitalWrite(ci_Ultrasonic_Ping, HIGH);
+  digitalWrite(ci_Ultrasonic1_Ping, HIGH);
+
   delayMicroseconds(10); //The 10 microsecond pause where the pulse in "high"
-  digitalWrite(ci_Ultrasonic_Ping, LOW);
+  digitalWrite(ci_Ultrasonic1_Ping, LOW);
   //use command pulseIn to listen to Ultrasonic_Data pin to record the
   //time that it takes from when the Pin goes HIGH until it goes LOW
-  ul_Echo_Time = pulseIn(ci_Ultrasonic_Data, HIGH, 10000);
+  ul_Echo_Time = pulseIn(ci_Ultrasonic1_Data, HIGH, 10000);
+
+  return ul_Echo_Time;
+
   // Print Sensor Readings
 #ifdef DEBUG_ULTRASONIC
   Serial.print("Time (microseconds): ");
@@ -22,45 +26,33 @@ void Ping()
 #endif
 }
 
-// read values from line trackers and update status of line tracker LEDs
-void readLineTrackers()
+int pingLeft()
 {
-  ui_Left_Line_Tracker_Data = analogRead(ci_Left_Line_Tracker);
-  ui_Middle_Line_Tracker_Data = analogRead(ci_Middle_Line_Tracker);
-  ui_Right_Line_Tracker_Data = analogRead(ci_Right_Line_Tracker);
-  if (ui_Left_Line_Tracker_Data < (ui_Left_Line_Tracker_Dark - ui_Line_Tracker_Tolerance))
-  {
-    CharliePlexM::Write(ci_Left_Line_Tracker_LED, HIGH);
-  }
-  else
-  {
-    CharliePlexM::Write(ci_Left_Line_Tracker_LED, LOW);
-  }
-  if (ui_Middle_Line_Tracker_Data < (ui_Middle_Line_Tracker_Dark - ui_Line_Tracker_Tolerance))
-  {
-    CharliePlexM::Write(ci_Middle_Line_Tracker_LED, HIGH);
-  }
-  else
-  {
-    CharliePlexM::Write(ci_Middle_Line_Tracker_LED, LOW);
-  }
-  if (ui_Right_Line_Tracker_Data < (ui_Right_Line_Tracker_Dark - ui_Line_Tracker_Tolerance))
-  {
-    CharliePlexM::Write(ci_Right_Line_Tracker_LED, HIGH);
-  }
-  else
-  {
-    CharliePlexM::Write(ci_Right_Line_Tracker_LED, LOW);
-  }
-#ifdef DEBUG_LINE_TRACKERS
-  Serial.print("Trackers: Left = ");
-  Serial.print(ui_Left_Line_Tracker_Data, DEC);
-  Serial.print(", Middle = ");
-  Serial.print(ui_Middle_Line_Tracker_Data, DEC);
-  Serial.print(", Right = ");
-  Serial.println(ui_Right_Line_Tracker_Data, DEC);
-#endif
+  digitalWrite(ci_Ultrasonic2_Ping, HIGH);
+  delayMicroseconds(10); //The 10 microsecond pause where the pulse in "high"
+  digitalWrite(ci_Ultrasonic2_Ping, LOW);
+
+  ul_Echo_Time2 = pulseIn(ci_Ultrasonic2_Data, HIGH, 10000);
+
+  return ul_Echo_Time2;
+
+
+
+
+
 }
+
+int modeCheck(){
+  
+  
+  
+
+  return 0;
+}
+
+
+
+
 
 // set mode indicator LED state
 void Indicator()
@@ -73,5 +65,5 @@ void Indicator()
 }
 
 
-void pickUp(){
+void pickUp() {
 }
