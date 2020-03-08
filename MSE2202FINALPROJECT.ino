@@ -197,7 +197,27 @@ void loop()
             //add proper movement depending on mode that modeCheck() has given
             //Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
        
-            Serial.println(mode);
+            switch(mode){
+              case 1:{    //NORTHWEST AKA LEFT START
+                pingFront();
+                pingLeft();
+                if(pingFront() > 22){
+                  Serial.println(pingFront());
+                  moveStraight();
+                }
+                else{
+                  moveStop();
+                }
+                
+                
+                
+                
+              }
+
+              case 2:{    //SOUTHWEST AKA RIGHT START
+                
+              }
+            }
 
 
 
