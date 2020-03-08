@@ -130,3 +130,4 @@ boolean found = false;
 unsigned long darkMil = 0;
 long lightMil = 0;
 int Freq;
+int mode;

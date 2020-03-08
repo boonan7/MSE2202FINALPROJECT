@@ -12,8 +12,9 @@ int pingFront()
   //use command pulseIn to listen to Ultrasonic_Data pin to record the
   //time that it takes from when the Pin goes HIGH until it goes LOW
   ul_Echo_Time = pulseIn(ci_Ultrasonic1_Data, HIGH, 10000);
+  //MIGHT HAVE TO CHANGE TO 25000
 
-  return ul_Echo_Time;
+  return ul_Echo_Time/29;
 
   // Print Sensor Readings
 #ifdef DEBUG_ULTRASONIC
@@ -33,9 +34,10 @@ int pingLeft()
   digitalWrite(ci_Ultrasonic2_Ping, LOW);
 
   ul_Echo_Time2 = pulseIn(ci_Ultrasonic2_Data, HIGH, 10000);
+  //MIGHT HAVE TO CHANGE TO 25000
 
-  return ul_Echo_Time2;
-
+  return ul_Echo_Time2/29;
+  //div by 29 since i think vex already divides it by 2
 
 
 
@@ -43,11 +45,19 @@ int pingLeft()
 }
 
 int modeCheck(){
-  
-  
-  
+  pingLeft();
+  pingFront();
 
-  return 0;
+  if(pingFront() > pingLeft()){
+    return 1;
+    //NORTHWEST AKA LEFT START
+  }
+  else{
+    return 2;
+    //SOUTHWEST AKA RIGHT START
+  }
+  
+  
 }
 
 

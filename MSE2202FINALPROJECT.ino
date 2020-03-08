@@ -18,7 +18,7 @@ boolean bt_3_S_Time_Up = false;
 boolean bt_Do_Once = false;
 boolean bt_Cal_Initialized = false;
 
-boolean gang = true;
+boolean ini = true;
 boolean gang2 = false;
 
 
@@ -105,6 +105,10 @@ void setup() {
   b_LowByte = EEPROM.read(ci_Right_Motor_Offset_Address_L);
   b_HighByte = EEPROM.read(ci_Right_Motor_Offset_Address_H);
   ui_Right_Motor_Offset = word(b_HighByte, b_LowByte);
+
+
+
+
 }
 
 void loop()
@@ -148,6 +152,7 @@ void loop()
       {
         pingFront();
         pingLeft();
+        modeCheck();
         servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
         servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
         servo_ArmMotor.write(ci_Arm_Servo_Retracted);
@@ -155,6 +160,9 @@ void loop()
         encoder_LeftMotor.zero();
         encoder_RightMotor.zero();
         ui_Mode_Indicator_Index = 0;
+
+        mode = modeCheck();
+        
         break;
       }
     case 1: //Robot Run after 3 seconds
@@ -170,7 +178,7 @@ void loop()
           l_Right_Motor_Position = encoder_RightMotor.getRawPosition();
           Serial.print("Encoders L: ");
           Serial.print(l_Left_Motor_Position);
-          Serial.print(", R: "); 
+          Serial.print(", R: ");
           Serial.println(l_Right_Motor_Position);
 #endif
           // set motor speeds
@@ -182,12 +190,15 @@ void loop()
             possibly encoder counts.
             /*************************************************************************************/
 
+
           if (bt_Motors_Enabled)
           {
 
             //add proper movement depending on mode that modeCheck() has given
-            Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
-          
+            //Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
+       
+            Serial.println(mode);
+
 
 
 
@@ -212,9 +223,9 @@ void loop()
               }
             }
             else {
-//              // when it does NOT sense IR Sensor
-//              Serial.println("cant find nothin");
-//              moveFind();
+              //              // when it does NOT sense IR Sensor
+              //              Serial.println("cant find nothin");
+              //              moveFind();
             }
 
 
@@ -259,7 +270,7 @@ void loop()
           else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
           {
             ul_Calibration_Time = millis();
-            
+
             ui_Left_Line_Tracker_Light += ui_Left_Line_Tracker_Data;
             ui_Middle_Line_Tracker_Light += ui_Middle_Line_Tracker_Data;
             ui_Right_Line_Tracker_Light += ui_Right_Line_Tracker_Data;
