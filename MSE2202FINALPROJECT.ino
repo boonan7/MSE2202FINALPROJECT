@@ -18,9 +18,11 @@ boolean bt_3_S_Time_Up = false;
 boolean bt_Do_Once = false;
 boolean bt_Cal_Initialized = false;
 
-boolean ini = true;
-boolean gang2 = false;
 
+boolean goMid = false;
+boolean goUp = true;
+boolean gang = false;
+boolean goOnce = true;
 
 // Uncomment keywords to enable debugging output
 //#define DEBUG_MODE_DISPLAY
@@ -33,7 +35,7 @@ boolean gang2 = false;
 //#define LAB_3_COURSE
 //#define LAB_4_COURSE
 //#define PLEASE_WORK
-#define FUCK
+//#define DEBUG_IR
 
 void setup() {
   Wire.begin(); // Wire library required for I2CEncoder library
@@ -162,7 +164,7 @@ void loop()
         ui_Mode_Indicator_Index = 0;
 
         mode = modeCheck();
-        
+
         break;
       }
     case 1: //Robot Run after 3 seconds
@@ -196,27 +198,38 @@ void loop()
 
             //add proper movement depending on mode that modeCheck() has given
             //Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
-       
-            switch(mode){
-              case 1:{    //NORTHWEST AKA LEFT START
-                pingFront();
-                pingLeft();
-                if(pingFront() > 22){
-                  Serial.println(pingFront());
-                  moveStraight();
-                }
-                else{
-                  moveStop();
-                }
-                
-                
-                
-                
-              }
 
-              case 2:{    //SOUTHWEST AKA RIGHT START
-                
-              }
+            switch (mode) {
+              case 1: {   //NORTHWEST AKA LEFT START
+                  pingFront();
+                  pingLeft();
+                  if (goUp) {
+
+                    if (pingFront() > 22) {
+                      moveStraight();
+                    }
+                    else {
+                      moveStop();
+                      goUp = false;
+                    }
+                  }
+
+                  if (goMid) {
+                    turnNinety = true;
+                    turnRight();
+
+
+                  }
+
+
+
+
+                  break;
+                }
+
+              case 2: {   //SOUTHWEST AKA RIGHT START
+
+                }
             }
 
 
@@ -230,13 +243,13 @@ void loop()
             if (mySerial.available()) {
               switch (IRSense()) {
                 case 0: {
-                    Serial.println("zero bitch");
+                    Serial.println("zero ");
                     //moveStraight();
                     break;
                   }
 
                 case 5: {
-                    Serial.println("five cunt");
+                    Serial.println("five ");
                     //moveStraight();
                     break;
                   }
@@ -278,47 +291,74 @@ void loop()
       {
         if (bt_3_S_Time_Up)
         {
-          if (!bt_Cal_Initialized)
-          {
-            bt_Cal_Initialized = true;
-            ui_Left_Line_Tracker_Light = 0;
-            ui_Middle_Line_Tracker_Light = 0;
-            ui_Right_Line_Tracker_Light = 0;
-            ul_Calibration_Time = millis();
-            ui_Cal_Count = 0;
-          }
-          else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
-          {
-            ul_Calibration_Time = millis();
+          if (mySerial.available()) {
+            switch (IRSense()) {
+              case 0: {
+                  Serial.println("zero ");
+                  moveStraight();
+                  break;
+                }
 
-            ui_Left_Line_Tracker_Light += ui_Left_Line_Tracker_Data;
-            ui_Middle_Line_Tracker_Light += ui_Middle_Line_Tracker_Data;
-            ui_Right_Line_Tracker_Light += ui_Right_Line_Tracker_Data;
-            ui_Cal_Count++;
+              case 5: {
+                  Serial.println("five ");
+                  moveStraight();
+                  break;
+                }
+            }
           }
-          if (ui_Cal_Count == ci_Line_Tracker_Cal_Measures)
-          {
-            ui_Left_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-            ui_Middle_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-            ui_Right_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-#ifdef DEBUG_LINE_TRACKER_CALIBRATION
-            Serial.print("Light Levels: Left = ");
-            Serial.print(ui_Left_Line_Tracker_Light, DEC);
-            Serial.print(", Middle = ");
-            Serial.print(ui_Middle_Line_Tracker_Light, DEC);
-            Serial.print(", Right = ");
-            Serial.println(ui_Right_Line_Tracker_Light, DEC);
-#endif
-            EEPROM.write(ci_Left_Line_Tracker_Light_Address_L, lowByte(ui_Left_Line_Tracker_Light));
-            EEPROM.write(ci_Left_Line_Tracker_Light_Address_H, highByte(ui_Left_Line_Tracker_Light));
-            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_L, lowByte(ui_Middle_Line_Tracker_Light));
-            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_H, highByte(ui_Middle_Line_Tracker_Light));
-            EEPROM.write(ci_Right_Line_Tracker_Light_Address_L, lowByte(ui_Right_Line_Tracker_Light));
-            EEPROM.write(ci_Right_Line_Tracker_Light_Address_H, highByte(ui_Right_Line_Tracker_Light));
-            ui_Robot_State_Index = 0; // go back to Mode 0
+          else {
+            //              // when it does NOT sense IR Sensor
+            //              Serial.println("cant find nothin");
+            //              moveFind();
           }
-          ui_Mode_Indicator_Index = 2;
+
+          Scan();
+
+
         }
+
+
+        //          if (!bt_Cal_Initialized)
+        //          {
+        //            bt_Cal_Initialized = true;
+        //            ui_Left_Line_Tracker_Light = 0;
+        //            ui_Middle_Line_Tracker_Light = 0;
+        //            ui_Right_Line_Tracker_Light = 0;
+        //            ul_Calibration_Time = millis();
+        //            ui_Cal_Count = 0;
+        //          }
+        //          else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
+        //          {
+        //            ul_Calibration_Time = millis();
+        //
+        //            ui_Left_Line_Tracker_Light += ui_Left_Line_Tracker_Data;
+        //            ui_Middle_Line_Tracker_Light += ui_Middle_Line_Tracker_Data;
+        //            ui_Right_Line_Tracker_Light += ui_Right_Line_Tracker_Data;
+        //            ui_Cal_Count++;
+        //          }
+        //          if (ui_Cal_Count == ci_Line_Tracker_Cal_Measures)
+        //          {
+        //            ui_Left_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
+        //            ui_Middle_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
+        //            ui_Right_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
+        //#ifdef DEBUG_LINE_TRACKER_CALIBRATION
+        //            Serial.print("Light Levels: Left = ");
+        //            Serial.print(ui_Left_Line_Tracker_Light, DEC);
+        //            Serial.print(", Middle = ");
+        //            Serial.print(ui_Middle_Line_Tracker_Light, DEC);
+        //            Serial.print(", Right = ");
+        //            Serial.println(ui_Right_Line_Tracker_Light, DEC);
+        //#endif
+        //            EEPROM.write(ci_Left_Line_Tracker_Light_Address_L, lowByte(ui_Left_Line_Tracker_Light));
+        //            EEPROM.write(ci_Left_Line_Tracker_Light_Address_H, highByte(ui_Left_Line_Tracker_Light));
+        //            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_L, lowByte(ui_Middle_Line_Tracker_Light));
+        //            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_H, highByte(ui_Middle_Line_Tracker_Light));
+        //            EEPROM.write(ci_Right_Line_Tracker_Light_Address_L, lowByte(ui_Right_Line_Tracker_Light));
+        //            EEPROM.write(ci_Right_Line_Tracker_Light_Address_H, highByte(ui_Right_Line_Tracker_Light));
+        //            ui_Robot_State_Index = 0; // go back to Mode 0
+        //          }
+        //          ui_Mode_Indicator_Index = 2;
+        //        }
         break;
       }
     case 3: // Calibrate line tracker dark levels after 3 seconds

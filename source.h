@@ -13,18 +13,18 @@ I2CEncoder encoder_RightMotor;
 I2CEncoder encoder_LeftMotor;
 
 
-SoftwareSerial mySerial(A0, 11); // RX, TX
+SoftwareSerial mySerial(2, 11); // RX, TX
 
 
 
 //port pin constants
-const int ci_Ultrasonic1_Ping = 2; //input plug
-const int ci_Ultrasonic1_Data = 3; //output plug
-const int ci_Ultrasonic2_Ping = 4;
-const int ci_Ultrasonic2_Data = 5;
+const int ci_Ultrasonic1_Ping = 10; //input plug
+const int ci_Ultrasonic1_Data = 11; //output plug
+const int ci_Ultrasonic2_Ping = 12;
+const int ci_Ultrasonic2_Data = 13;
 
-const int ci_Charlieplex_LED1 = 10;
-const int ci_Charlieplex_LED2 = 10;
+const int ci_Charlieplex_LED1 = 6;
+const int ci_Charlieplex_LED2 = 6;
 const int ci_Charlieplex_LED3 = 6;
 const int ci_Charlieplex_LED4 = 7;
 const int ci_Mode_Button = 7;
@@ -127,7 +127,21 @@ int iArrayIndex = 0;
 
 int courseStep = 1;
 boolean found = false;
-unsigned long darkMil = 0;
+unsigned long prevMil;
+unsigned long prevMil2;
+unsigned long currMil;
+
+unsigned int leftSpeed = 1600;
+unsigned int rightSpeed = 1400;
+
+boolean turnNinety = true;
+boolean turnScan = true;
+boolean scanLeft = true;
+boolean scanRight = true;
+
+
 long lightMil = 0;
 int Freq;
 int mode;
+const int period = 1000;
+const int scanPeriod = 1500;

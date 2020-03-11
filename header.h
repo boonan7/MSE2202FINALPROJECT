@@ -56,8 +56,6 @@ int modeCheck(){
     return 2;
     //SOUTHWEST AKA RIGHT START
   }
-  
-  
 }
 
 
@@ -72,8 +70,4 @@ void Indicator()
                                           (iArray[iArrayIndex])));
   iArrayIndex++;
   iArrayIndex = iArrayIndex & 15;
-}
-
-
-void pickUp() {
 }
