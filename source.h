@@ -133,6 +133,7 @@ unsigned long currMil;
 
 unsigned int leftSpeed = 1600;
 unsigned int rightSpeed = 1400;
+unsigned int straightSpeed = 1700;
 
 boolean turnNinety = true;
 boolean turnScan = true;
@@ -143,5 +144,6 @@ boolean scanRight = true;
 long lightMil = 0;
 int Freq;
 int mode;
-const int period = 1000;
-const int scanPeriod = 1500;
+const int ninetyPeriod = 1000;
+const int turnAroundPeriod = 2400;
+const int scanPeriod = 2000;

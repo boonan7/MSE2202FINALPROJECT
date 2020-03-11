@@ -294,25 +294,50 @@ void loop()
           if (mySerial.available()) {
             switch (IRSense()) {
               case 0: {
-                  Serial.println("zero ");
-                  moveStraight();
+                  pingFront();
+                  //Serial.println("zero ");
+                  if (pingFront() < 5) {
+                    Serial.println(pingFront());
+                    moveStop();
+                    moveTurnAround();
+
+                    //back up
+                    //turn around
+                    //move towards bridge
+
+                  }
+                  else {
+                    moveStraight();
+                  }
+
                   break;
                 }
 
               case 5: {
-                  Serial.println("five ");
-                  moveStraight();
-                  break;
+                  pingFront();
+                  //Serial.println("five ");
+                  if (pingFront() < 5) {
+                    Serial.println(pingFront());
+                    moveStop();
+                    moveTurnAround();
+
+                    //back up
+                    //turn around
+                    //move towards bridge
+
+                  }
+                  else {
+                    moveStraight();
+                  }
+
                 }
             }
           }
           else {
-            //              // when it does NOT sense IR Sensor
-            //              Serial.println("cant find nothin");
-            //              moveFind();
+            moveScan();
           }
 
-          Scan();
+
 
 
         }
@@ -365,45 +390,7 @@ void loop()
       {
         if (bt_3_S_Time_Up)
         {
-          if (!bt_Cal_Initialized)
-          {
-            bt_Cal_Initialized = true;
-            ui_Left_Line_Tracker_Dark = 0;
-            ui_Middle_Line_Tracker_Dark = 0;
-            ui_Right_Line_Tracker_Dark = 0;
-            ul_Calibration_Time = millis();
-            ui_Cal_Count = 0;
-          }
-          else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
-          {
-            ul_Calibration_Time = millis();
-            ui_Left_Line_Tracker_Dark += ui_Left_Line_Tracker_Data;
-            ui_Middle_Line_Tracker_Dark += ui_Middle_Line_Tracker_Data;
-            ui_Right_Line_Tracker_Dark += ui_Right_Line_Tracker_Data;
-            ui_Cal_Count++;
-          }
-          if (ui_Cal_Count == ci_Line_Tracker_Cal_Measures)
-          {
-            ui_Left_Line_Tracker_Dark /= ci_Line_Tracker_Cal_Measures;
-            ui_Middle_Line_Tracker_Dark /= ci_Line_Tracker_Cal_Measures;
-            ui_Right_Line_Tracker_Dark /= ci_Line_Tracker_Cal_Measures;
-#ifdef DEBUG_LINE_TRACKER_CALIBRATION
-            Serial.print("Dark Levels: Left = ");
-            Serial.print(ui_Left_Line_Tracker_Dark, DEC);
-            Serial.print(", Middle = ");
-            Serial.print(ui_Middle_Line_Tracker_Dark, DEC);
-            Serial.print(", Right = ");
-            Serial.println(ui_Right_Line_Tracker_Dark, DEC);
-#endif
-            EEPROM.write(ci_Left_Line_Tracker_Dark_Address_L, lowByte(ui_Left_Line_Tracker_Dark));
-            EEPROM.write(ci_Left_Line_Tracker_Dark_Address_H, highByte(ui_Left_Line_Tracker_Dark));
-            EEPROM.write(ci_Middle_Line_Tracker_Dark_Address_L, lowByte(ui_Middle_Line_Tracker_Dark));
-            EEPROM.write(ci_Middle_Line_Tracker_Dark_Address_H, highByte(ui_Middle_Line_Tracker_Dark));
-            EEPROM.write(ci_Right_Line_Tracker_Dark_Address_L, lowByte(ui_Right_Line_Tracker_Dark));
-            EEPROM.write(ci_Right_Line_Tracker_Dark_Address_H, highByte(ui_Right_Line_Tracker_Dark));
-            ui_Robot_State_Index = 0; // go back to Mode 0
-          }
-          ui_Mode_Indicator_Index = 3;
+          moveScan();
         }
         break;
       }

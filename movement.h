@@ -17,8 +17,8 @@ void moveRight() {
 }
 
 void moveStraight() {
-  servo_LeftMotor.writeMicroseconds(1800);
-  servo_RightMotor.writeMicroseconds(1800);
+  servo_LeftMotor.writeMicroseconds(straightSpeed);
+  servo_RightMotor.writeMicroseconds(straightSpeed);
 
 }
 
@@ -36,21 +36,38 @@ void turnRight() {
     servo_RightMotor.writeMicroseconds(rightSpeed);
   }
 
-  else if (millis() - prevMil > period) {
+  else if (millis() - prevMil > ninetyPeriod) {
     servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
     servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
   }
 }
 
-void Scan() {
-
+void moveTurnAround() {
   if (turnNinety) {
     turnNinety = false;
     prevMil = millis();
     servo_LeftMotor.writeMicroseconds(leftSpeed);
     servo_RightMotor.writeMicroseconds(rightSpeed);
   }
-  
+
+  else if (millis() - prevMil > turnAroundPeriod) {
+    servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
+    servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
+  }
+
+}
+
+void moveScan() {
+
+  if (turnNinety) {
+    turnNinety = false;
+    prevMil = millis();
+    servo_LeftMotor.writeMicroseconds(leftSpeed);
+    servo_RightMotor.writeMicroseconds(rightSpeed);
+
+
+  }
+
   if ((millis() - prevMil) > scanPeriod) {
     if (scanLeft) {
       scanLeft = false;
