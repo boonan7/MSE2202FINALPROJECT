@@ -7,8 +7,6 @@
 #include <SoftwareSerial.h>
 Servo servo_RightMotor;
 Servo servo_LeftMotor;
-Servo servo_ArmMotor;
-Servo servo_GripMotor;
 I2CEncoder encoder_RightMotor;
 I2CEncoder encoder_LeftMotor;
 
@@ -130,15 +128,26 @@ boolean found = false;
 unsigned long prevMil;
 unsigned long prevMil2;
 unsigned long currMil;
+unsigned long ul_Echo_Mil = 0;
 
 unsigned int leftSpeed = 1600;
 unsigned int rightSpeed = 1400;
 unsigned int straightSpeed = 1700;
+unsigned int backSpeed = 1300;
+unsigned int leftSpeedFull = 1575;
+unsigned int rightSpeedFull = 1425;
 
 boolean turnNinety = true;
 boolean turnScan = true;
 boolean scanLeft = true;
 boolean scanRight = true;
+boolean goOnce = true;
+boolean goOnceMain = true;
+boolean startScan = false;
+boolean moveBackOnce = true;
+boolean touchedBeac = true;
+boolean backProt = false;
+boolean firstScan = true;
 
 
 long lightMil = 0;
@@ -146,4 +155,6 @@ int Freq;
 int mode;
 const int ninetyPeriod = 1000;
 const int turnAroundPeriod = 2400;
-const int scanPeriod = 2000;
+int scanPeriod = 3000;
+const int middlePeriod = 5500;
+const int backPeriod = 2000;

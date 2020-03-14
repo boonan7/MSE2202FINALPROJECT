@@ -22,7 +22,6 @@ boolean bt_Cal_Initialized = false;
 boolean goMid = false;
 boolean goUp = true;
 boolean gang = false;
-boolean goOnce = true;
 
 // Uncomment keywords to enable debugging output
 //#define DEBUG_MODE_DISPLAY
@@ -59,11 +58,6 @@ void setup() {
   pinMode(ci_Left_Motor, OUTPUT);
   servo_LeftMotor.attach(ci_Left_Motor);
 
-  // set up arm motors
-  pinMode(ci_Arm_Motor, OUTPUT);
-  servo_ArmMotor.attach(ci_Arm_Motor);
-  pinMode(ci_Grip_Motor, OUTPUT);
-  servo_GripMotor.attach(ci_Grip_Motor);
 
   // set up motor enable switch
   pinMode(ci_Motor_Enable_Switch, INPUT);
@@ -157,8 +151,6 @@ void loop()
         modeCheck();
         servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
         servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
-        servo_ArmMotor.write(ci_Arm_Servo_Retracted);
-        servo_GripMotor.write(ci_Grip_Motor_Closed);
         encoder_LeftMotor.zero();
         encoder_RightMotor.zero();
         ui_Mode_Indicator_Index = 0;
@@ -235,7 +227,6 @@ void loop()
 
 
 
-
             //must have interrupt that goes true if light sensor senses
             //interrupts only have thing
 
@@ -291,107 +282,53 @@ void loop()
       {
         if (bt_3_S_Time_Up)
         {
-          if (mySerial.available()) {
-            switch (IRSense()) {
-              case 0: {
-                  pingFront();
-                  //Serial.println("zero ");
-                  if (pingFront() < 5) {
-                    Serial.println(pingFront());
-                    moveStop();
-                    moveTurnAround();
 
-                    //back up
-                    //turn around
-                    //move towards bridge
 
-                  }
-                  else {
-                    moveStraight();
-                  }
 
-                  break;
-                }
 
-              case 5: {
-                  pingFront();
-                  //Serial.println("five ");
-                  if (pingFront() < 5) {
-                    Serial.println(pingFront());
-                    moveStop();
-                    moveTurnAround();
 
-                    //back up
-                    //turn around
-                    //move towards bridge
+          if (goOnceMain) {
+            moveMiddle();
+          }
 
-                  }
-                  else {
-                    moveStraight();
+          if (startScan) {
+
+            if (mySerial.available()) {
+
+              switch (IRSense()) {
+                case 0: {
+                    touchCheck1();
+                    break;
                   }
 
-                }
+                case 5: {
+                    touchCheck2();
+                    break;
+                  }
+              }
+
             }
-          }
-          else {
-            moveScan();
-          }
+
+            else {
+              moveScan();
+            }
 
 
+          }
 
 
         }
-
-
-        //          if (!bt_Cal_Initialized)
-        //          {
-        //            bt_Cal_Initialized = true;
-        //            ui_Left_Line_Tracker_Light = 0;
-        //            ui_Middle_Line_Tracker_Light = 0;
-        //            ui_Right_Line_Tracker_Light = 0;
-        //            ul_Calibration_Time = millis();
-        //            ui_Cal_Count = 0;
-        //          }
-        //          else if ((millis() - ul_Calibration_Time) > ci_Line_Tracker_Calibration_Interval)
-        //          {
-        //            ul_Calibration_Time = millis();
-        //
-        //            ui_Left_Line_Tracker_Light += ui_Left_Line_Tracker_Data;
-        //            ui_Middle_Line_Tracker_Light += ui_Middle_Line_Tracker_Data;
-        //            ui_Right_Line_Tracker_Light += ui_Right_Line_Tracker_Data;
-        //            ui_Cal_Count++;
-        //          }
-        //          if (ui_Cal_Count == ci_Line_Tracker_Cal_Measures)
-        //          {
-        //            ui_Left_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-        //            ui_Middle_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-        //            ui_Right_Line_Tracker_Light /= ci_Line_Tracker_Cal_Measures;
-        //#ifdef DEBUG_LINE_TRACKER_CALIBRATION
-        //            Serial.print("Light Levels: Left = ");
-        //            Serial.print(ui_Left_Line_Tracker_Light, DEC);
-        //            Serial.print(", Middle = ");
-        //            Serial.print(ui_Middle_Line_Tracker_Light, DEC);
-        //            Serial.print(", Right = ");
-        //            Serial.println(ui_Right_Line_Tracker_Light, DEC);
-        //#endif
-        //            EEPROM.write(ci_Left_Line_Tracker_Light_Address_L, lowByte(ui_Left_Line_Tracker_Light));
-        //            EEPROM.write(ci_Left_Line_Tracker_Light_Address_H, highByte(ui_Left_Line_Tracker_Light));
-        //            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_L, lowByte(ui_Middle_Line_Tracker_Light));
-        //            EEPROM.write(ci_Middle_Line_Tracker_Light_Address_H, highByte(ui_Middle_Line_Tracker_Light));
-        //            EEPROM.write(ci_Right_Line_Tracker_Light_Address_L, lowByte(ui_Right_Line_Tracker_Light));
-        //            EEPROM.write(ci_Right_Line_Tracker_Light_Address_H, highByte(ui_Right_Line_Tracker_Light));
-        //            ui_Robot_State_Index = 0; // go back to Mode 0
-        //          }
-        //          ui_Mode_Indicator_Index = 2;
-        //        }
         break;
       }
     case 3: // Calibrate line tracker dark levels after 3 seconds
       {
         if (bt_3_S_Time_Up)
         {
-          moveScan();
+          Serial.println(pingFront());
+          touchCheck1();
         }
+
+
         break;
       }
     case 4: //Calibrate motor straightness after 3 seconds.

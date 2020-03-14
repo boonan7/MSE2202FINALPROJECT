@@ -14,7 +14,7 @@ int pingFront()
   ul_Echo_Time = pulseIn(ci_Ultrasonic1_Data, HIGH, 10000);
   //MIGHT HAVE TO CHANGE TO 25000
 
-  return ul_Echo_Time/29;
+  return ul_Echo_Time ;
 
   // Print Sensor Readings
 #ifdef DEBUG_ULTRASONIC
@@ -36,7 +36,7 @@ int pingLeft()
   ul_Echo_Time2 = pulseIn(ci_Ultrasonic2_Data, HIGH, 10000);
   //MIGHT HAVE TO CHANGE TO 25000
 
-  return ul_Echo_Time2/29;
+  return ul_Echo_Time2;
   //div by 29 since i think vex already divides it by 2
 
 
@@ -44,15 +44,24 @@ int pingLeft()
 
 }
 
-int modeCheck(){
+int updatePingFront() {
+  if ((millis() - ul_Echo_Mil) >= 60) {
+  ul_Echo_Mil = millis();
+    return pingFront();
+
+
+  }
+}
+
+int modeCheck() {
   pingLeft();
   pingFront();
 
-  if(pingFront() > pingLeft()){
+  if (pingFront() > pingLeft()) {
     return 1;
     //NORTHWEST AKA LEFT START
   }
-  else{
+  else {
     return 2;
     //SOUTHWEST AKA RIGHT START
   }

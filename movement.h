@@ -68,23 +68,137 @@ void moveScan() {
 
   }
 
-  if ((millis() - prevMil) > scanPeriod) {
-    if (scanLeft) {
-      scanLeft = false;
-      scanRight = true;
-      prevMil = millis();
-      servo_LeftMotor.writeMicroseconds(rightSpeed);
-      servo_RightMotor.writeMicroseconds(leftSpeed);
+  if (firstScan) {
+    if ((millis() - prevMil) > (scanPeriod / 2)) {
+      firstScan = false;
+      if (scanLeft) {
+        scanLeft = false;
+        scanRight = true;
+        prevMil = millis();
+
+        servo_LeftMotor.writeMicroseconds(rightSpeed);
+        servo_RightMotor.writeMicroseconds(leftSpeed);
+
+
+      }
+      else if (scanRight) {
+        scanLeft = true;
+        scanRight = false;
+        prevMil = millis();
+        servo_LeftMotor.writeMicroseconds(leftSpeed);
+        servo_RightMotor.writeMicroseconds(rightSpeed);
+      }
+    }
+  }
+  else {
+    if ((millis() - prevMil) > scanPeriod) {
+      if (scanLeft) {
+        scanLeft = false;
+        scanRight = true;
+        prevMil = millis();
+
+        servo_LeftMotor.writeMicroseconds(rightSpeed);
+        servo_RightMotor.writeMicroseconds(leftSpeed);
+
+
+      }
+      else if (scanRight) {
+        scanLeft = true;
+        scanRight = false;
+        prevMil = millis();
+        servo_LeftMotor.writeMicroseconds(leftSpeed);
+        servo_RightMotor.writeMicroseconds(rightSpeed);
+      }
+    }
+  }
+}
+
+void moveScanFull() {
+  servo_LeftMotor.writeMicroseconds(leftSpeedFull);
+  servo_RightMotor.writeMicroseconds(rightSpeedFull);
+}
+
+void moveMiddle() {
+  if (goOnce) {
+    goOnce = false;
+    prevMil = millis();
+    servo_LeftMotor.writeMicroseconds(straightSpeed);
+    servo_RightMotor.writeMicroseconds(straightSpeed);
+
+
+  }
+
+  else if ((millis() - prevMil) > middlePeriod) {
+
+    servo_LeftMotor.writeMicroseconds(ci_Left_Motor_Stop);
+    servo_RightMotor.writeMicroseconds(ci_Right_Motor_Stop);
+    startScan = true;
+    goOnceMain = false;
+
+
+
+
+  }
+
+
+}
+
+void  moveBack() {
+  if (moveBackOnce) {
+    moveBackOnce = false;
+    prevMil = millis();
+    servo_LeftMotor.writeMicroseconds(backSpeed);
+    servo_RightMotor.writeMicroseconds(backSpeed);
+    Serial.println("BACK");
+
+  }
+
+  else {
+    if ((millis() - prevMil) > backPeriod) {
+      moveScanFull();
 
 
     }
-    else if (scanRight) {
-      scanLeft = true;
-      scanRight = false;
-      prevMil = millis();
-      servo_LeftMotor.writeMicroseconds(leftSpeed);
-      servo_RightMotor.writeMicroseconds(rightSpeed);
+
+  }
+
+}
+
+void touchCheck1() {
+  pingFront();
+
+  if (pingFront() <= 25 && pingFront() >= 0) {
+    backProt = true;
+  }
+  else {
+    if (touchedBeac) {
+
+      moveStraight();
     }
+
+  }
+
+  if (backProt) {
+
+    moveBack();
+    touchedBeac = false;
+  }
+
+
+
+
+}
+void touchCheck2() {
+  pingFront();
+
+  if (pingFront() <=  25 && pingFront() >= 0) {
+    moveStop();
+  }
+  else {
+
+      moveStraight();
+    
+
   }
 
 }
