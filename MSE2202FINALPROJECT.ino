@@ -44,7 +44,7 @@ void setup() {
 
   mySerial.begin(2400);
 
-  Serial.print("welcome to hell mother fucker");
+  Serial.print("initializing");
 
   // set up ultrasonic
   pinMode(ci_Ultrasonic1_Ping, OUTPUT);
@@ -70,31 +70,8 @@ void setup() {
   encoder_RightMotor.init(1.0 / 3.0 * MOTOR_393_SPEED_ROTATIONS, MOTOR_393_TIME_DELTA);
   encoder_RightMotor.setReversed(true); // adjust for positive count when moving forward
 
-  // set up line tracking sensors
-  pinMode(ci_Right_Line_Tracker, INPUT);
-  pinMode(ci_Middle_Line_Tracker, INPUT);
-  pinMode(ci_Left_Line_Tracker, INPUT);
-  ui_Line_Tracker_Tolerance = ci_Line_Tracker_Tolerance;
 
   // read saved values from EEPROM
-  b_LowByte = EEPROM.read(ci_Left_Line_Tracker_Dark_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Dark_Address_H);
-  ui_Left_Line_Tracker_Dark = word(b_HighByte, b_LowByte);
-  b_LowByte = EEPROM.read(ci_Left_Line_Tracker_Light_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Light_Address_H);
-  ui_Left_Line_Tracker_Light = word(b_HighByte, b_LowByte);
-  b_LowByte = EEPROM.read(ci_Middle_Line_Tracker_Dark_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Dark_Address_H);
-  ui_Middle_Line_Tracker_Dark = word(b_HighByte, b_LowByte);
-  b_LowByte = EEPROM.read(ci_Middle_Line_Tracker_Light_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Light_Address_H);
-  ui_Middle_Line_Tracker_Light = word(b_HighByte, b_LowByte);
-  b_LowByte = EEPROM.read(ci_Right_Line_Tracker_Dark_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Dark_Address_H);
-  ui_Right_Line_Tracker_Dark = word(b_HighByte, b_LowByte);
-  b_LowByte = EEPROM.read(ci_Right_Line_Tracker_Light_Address_L);
-  b_HighByte = EEPROM.read(ci_Left_Line_Tracker_Light_Address_H);
-  ui_Right_Line_Tracker_Light = word(b_HighByte, b_LowByte);
   b_LowByte = EEPROM.read(ci_Left_Motor_Offset_Address_L);
   b_HighByte = EEPROM.read(ci_Left_Motor_Offset_Address_H);
   ui_Left_Motor_Offset = word(b_HighByte, b_LowByte);
@@ -138,8 +115,8 @@ void loop()
   // modes
   // 0 = default after power up/reset
   // 1 = Press mode button once to enter. Run robot.
-  // 2 = Press mode button twice to enter. Calibrate line tracker light level.
-  // 3 = Press mode button three times to enter. Calibrate line tracker dark level.
+  // 2 = Press mode button twice to enter. Testing surface 1.
+  // 3 = Press mode button three times to enter. Testing surface 2.
   // 4 = Press mode button four times to enter. Calibrate motor speeds to drive straight.
 
   switch (ui_Robot_State_Index)
@@ -154,16 +131,14 @@ void loop()
         encoder_LeftMotor.zero();
         encoder_RightMotor.zero();
         ui_Mode_Indicator_Index = 0;
-
-        mode = modeCheck();
+        
+        mode = modeCheck();       //allows the robot to know what corner it is in
+                                  //modeCheck(); allows us to figure out the orientation of the robot
 
         break;
       }
     case 1: //Robot Run after 3 seconds
       {
-
-        //modeCheck(); allows us to figure out the orientation of the robot
-
 
         if (bt_3_S_Time_Up)
         {
@@ -178,18 +153,9 @@ void loop()
           // set motor speeds
           ui_Left_Motor_Speed = constrain(ui_Motors_Speed + ui_Left_Motor_Offset, 1600, 2100);
           ui_Right_Motor_Speed = constrain(ui_Motors_Speed + ui_Right_Motor_Offset, 1600, 2100);
-          /***************************************************************************************
-            Add line tracking code here.
-            Adjust motor speed according to information from line tracking sensors and
-            possibly encoder counts.
-            /*************************************************************************************/
-
-
+         
           if (bt_Motors_Enabled)
           {
-
-            //add proper movement depending on mode that modeCheck() has given
-            //Serial.print("Front: ");Serial.print(pingFront());Serial.print("\t");Serial.print("Left: ");Serial.println(pingLeft());
 
             switch (mode) {
               case 1: {   //NORTHWEST AKA LEFT START
@@ -213,9 +179,6 @@ void loop()
 
                   }
 
-
-
-
                   break;
                 }
 
@@ -227,10 +190,9 @@ void loop()
 
 
 
-            //must have interrupt that goes true if light sensor senses
-            //interrupts only have thing
+         
 
-            //IF IT SENSES AN IR CUNT
+            //IF IT SENSES AN IR
             if (mySerial.available()) {
               switch (IRSense()) {
                 case 0: {

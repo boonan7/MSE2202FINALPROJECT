@@ -27,7 +27,7 @@ void moveFind() {
   servo_RightMotor.writeMicroseconds(1600);
 }
 
-void turnRight() {
+void turnRight() {    //90 degree right turn
 
   if (turnNinety) {
     turnNinety = false;
@@ -42,7 +42,7 @@ void turnRight() {
   }
 }
 
-void moveTurnAround() {
+void moveTurnAround() {         //uncomplete 360 turn that was never used
   if (turnNinety) {
     turnNinety = false;
     prevMil = millis();
@@ -57,7 +57,7 @@ void moveTurnAround() {
 
 }
 
-void moveScan() {
+void moveScan() {           //180 degree scan
 
   if (turnNinety) {
     turnNinety = false;
@@ -113,12 +113,12 @@ void moveScan() {
   }
 }
 
-void moveScanFull() {
+void moveScanFull() {         //scanning verrsion of a full 360
   servo_LeftMotor.writeMicroseconds(leftSpeedFull);
   servo_RightMotor.writeMicroseconds(rightSpeedFull);
 }
 
-void moveMiddle() {
+void moveMiddle() {           //moving towards the middle from the corner if wanted
   if (goOnce) {
     goOnce = false;
     prevMil = millis();
@@ -143,7 +143,7 @@ void moveMiddle() {
 
 }
 
-void  moveBack() {
+void  moveBack() {          //moving back once the beacon has been touched to reach the middle
   if (moveBackOnce) {
     moveBackOnce = false;
     prevMil = millis();
@@ -164,7 +164,7 @@ void  moveBack() {
 
 }
 
-void touchCheck1() {
+void touchCheck1() {        //function to see if robot has touched the beacon and will start to move back
   pingFront();
 
   if (pingFront() <= 25 && pingFront() >= 0) {
@@ -187,12 +187,13 @@ void touchCheck1() {
 
 
 
-}
-void touchCheck2() {
+} 
+void touchCheck2() {        //moving back to the middle from the second beacon touch
   pingFront();
 
   if (pingFront() <=  25 && pingFront() >= 0) {
-    moveStop();
+    moveBack();
+    moveTurnAround();
   }
   else {
 

@@ -1,7 +1,7 @@
 
 // measure distance to target using ultrasonic sensor
 //#define DEBUG_LINE_TRACKERS
-int pingFront()
+int pingFront()       //front ultrasonic
 {
   //Ping Ultrasonic
   //Send the Ultrasonic Range Finder a 10 microsecond pulse per tech spec
@@ -27,7 +27,7 @@ int pingFront()
 #endif
 }
 
-int pingLeft()
+int pingLeft()    //Left ultrasonic
 {
   digitalWrite(ci_Ultrasonic2_Ping, HIGH);
   delayMicroseconds(10); //The 10 microsecond pause where the pulse in "high"
@@ -44,7 +44,7 @@ int pingLeft()
 
 }
 
-int updatePingFront() {
+int updatePingFront() {   //updates ultrasonic only at specific times
   if ((millis() - ul_Echo_Mil) >= 60) {
   ul_Echo_Mil = millis();
     return pingFront();
@@ -53,7 +53,7 @@ int updatePingFront() {
   }
 }
 
-int modeCheck() {
+int modeCheck() {       //checking to see which corner the robot is at
   pingLeft();
   pingFront();
 
